@@ -67,8 +67,8 @@ public class BackPAlgM extends BackPAlgBare {
 		// and copy weights from network to wBackup
 		_prepareBuffers();
 
-		//first change times momentum should be 0
-		wBackup.initializeWeights(0.0, 1.0);
+		//clear backup weights
+		wBackup.initializeWeights(0.0, 0.0);
 	}
 
 	@Override
