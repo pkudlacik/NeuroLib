@@ -54,6 +54,29 @@ public class BackPAlgBare extends SupervisedLearnAlg {
 		return output_error;
 	}
 
+	protected double _getMaxError(Vector<Double> input, Vector<Double> output) {
+
+		double tmp_err;
+		double output_error;
+
+		int layer_count = netFF.getLayerCount();
+
+		netFF.setInput(input);
+
+		output_error = 0.0;
+
+		for (int n = 0; n < netFF.Lrs[layer_count - 1].nCount; n++) {
+
+			tmp_err = output.get(n) - netFF.Lrs[layer_count - 1].neurons[n].out;
+			if (tmp_err < 0)
+				tmp_err = -tmp_err;
+			if (tmp_err > output_error)	
+				output_error = tmp_err;
+		}
+
+		return output_error;
+	}
+
 	/// Extends data buffers used in learning process.
 	/// Assigns maximum size needed for used neural network if buffers' sizes
 	/// are too small.
@@ -242,7 +265,7 @@ public class BackPAlgBare extends SupervisedLearnAlg {
 	}
 
 	@Override
-	public double learnEx(DataPackage input, DataPackage output) throws NeuroException {
+	public double learnForMaxError(DataPackage input, DataPackage output) throws NeuroException {
 		if (netFF == null) {
 			throw new NeuroException("Neural Network is not assigned.");
 		}
@@ -274,7 +297,7 @@ public class BackPAlgBare extends SupervisedLearnAlg {
 			last_error = 0.0;
 			for (i = 0; i < data_size; i++) {
 				learnOneStep(input.get(i).getData(), output.get(i).getData());
-				double error = _calcError(input.get(i).getData(), output.get(i).getData());
+				double error = _getMaxError(input.get(i).getData(), output.get(i).getData());
 				if (error > last_error) {
 					last_error = error;
 				}

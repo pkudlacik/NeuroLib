@@ -68,7 +68,7 @@ public class BackPAlgM extends BackPAlgBare {
 		_prepareBuffers();
 
 		//first change times momentum should be 0
-		wBackup.initializeWeights(0.0, 0.0);
+		wBackup.initializeWeights(0.0, 1.0);
 	}
 
 	@Override
@@ -244,7 +244,7 @@ public class BackPAlgM extends BackPAlgBare {
 	}
 
 	@Override
-	public double learnEx(DataPackage input, DataPackage output) throws NeuroException {
+	public double learnForMaxError(DataPackage input, DataPackage output) throws NeuroException {
 
 		if (netFF == null) {
 			throw new NeuroException("Neural Network is not assigned.");
@@ -281,7 +281,7 @@ public class BackPAlgM extends BackPAlgBare {
 			last_error = 0.0;
 			for (i = 0; i < data_size; i++) {
 				learnOneStep(input.get(i).getData(), output.get(i).getData());
-				double error = _calcError(input.get(i).getData(), output.get(i).getData());
+				double error = _getMaxError(input.get(i).getData(), output.get(i).getData());
 				if (error > last_error) {
 					last_error = error;
 				}

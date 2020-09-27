@@ -72,7 +72,7 @@ public abstract class SupervisedLearnAlg {
 		return 1.0;
 	}
 
-	public double learnEx(DataPackage input, DataPackage output) throws NeuroException {
+	public double learnForMaxError(DataPackage input, DataPackage output) throws NeuroException {
 		return 1.0;
 	}
 }
