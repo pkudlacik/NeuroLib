@@ -182,6 +182,22 @@ public class DataVector {
 		return destination;
 	}
 
+	/**
+	 * Returns an arithmetic average of all values
+	 * 
+	 * @return average
+	 */
+	public double getAverage() {
+
+		double sum = 0.0;
+
+		for (int i = 0; i < data.size(); i++) {
+			sum += data.get(i);
+		}
+
+		return sum/data.size();
+	}
+
 	@Override
 	public String toString() {
 

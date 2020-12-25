@@ -566,6 +566,16 @@ public class DataPackage {
 		return true;
 	}
 
+	public double getAverage() {
+		double sum = 0.0;
+
+		for (DataVector v : data) {
+			sum += v.getAverage();
+		}
+
+		return sum/data.size();
+	}	
+	
 	/**
 	 * @return text info about minimum and maximum values stored in loaded set
 	 */
