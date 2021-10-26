@@ -44,7 +44,7 @@ public class DataVector {
 		this.data = data;
 	}
 
-	public double get(int index) {
+	public Double get(int index) {
 		return data.get(index);
 	}
 
@@ -259,7 +259,7 @@ public class DataVector {
 	 *                          omitted). Type null for all.
 	 */
 	public void parse(String line, String field_separator, Character decimal_separator, Integer firstIdx,
-			Integer lastIdx) {
+			Integer lastIdx, boolean ignoreParseErrors) {
 		if (firstIdx == null) {
 			firstIdx = 0;
 		}
@@ -285,18 +285,21 @@ public class DataVector {
 		int index = 0;
 		for (String v : splitted) {
 			if (index >= firstIdx) { // omit first values
-				try {
 					v = v.trim();
 					if (!v.isEmpty()) {
 						if (decimal_separator != '.') {
 							v = v.replace(decimal_separator, '.');
 						}
-						Double d = Double.parseDouble(v);
+						Double d = null;
+						try {						
+							d = Double.parseDouble(v);
+						} catch (NumberFormatException e) {
+							if (!ignoreParseErrors) {
+								error = true;
+							}
+						}
 						vector.add(d);
 					}
-				} catch (NumberFormatException e) {
-					error = true;
-				}
 			}
 			index++;
 			if (lastIdx != null && index > lastIdx) {

@@ -27,6 +27,8 @@ public class DataPackage {
 	String sep_regexp = "[ ,;\\t]";
 	char decimal_separator = '.';
 
+	private boolean ignore_parse_errors = false;
+
 	public DataPackage() {
 	}
 
@@ -109,6 +111,14 @@ public class DataPackage {
 
 	public void setRowRegularExpression(String regexp) {
 		this.regexp = regexp;
+	}
+
+	public boolean isIgnoreParseErrors() {
+		return ignore_parse_errors;
+	}
+
+	public void setIgnoreParseErrors(boolean ignoreParseErrors) {
+		this.ignore_parse_errors = ignoreParseErrors;
 	}
 
 	/**
@@ -195,14 +205,18 @@ public class DataPackage {
 		// 3. check and set mins and maxs
 		// - only remaining first if size > max_size
 		for (int i = 0; i < old_size; i++) {
-			// copy new content (first values are max and min)
-			if (mins.get(i) > row.get(i)) {
-				mins.set(i, row.get(i));
-			}
-			if (maxs.get(i) < row.get(i)) {
-				maxs.set(i, row.get(i));
+			// if value not null
+			if (row.get(i) != null) {
+				// check and set min/max
+				if (mins.get(i) == null || mins.get(i) > row.get(i)) {
+					mins.set(i, row.get(i));
+				}
+				if (maxs.get(i) == null || maxs.get(i) < row.get(i)) {
+					maxs.set(i, row.get(i));
+				}
 			}
 		}
+
 	}
 
 	/**
@@ -359,14 +373,14 @@ public class DataPackage {
 	public DataPackage removeVectorsByColumnValue(int columnIndex, double value) {
 		DataPackage removed = new DataPackage();
 
-		for (int i = 0; i<data.size(); i++) {
+		for (int i = 0; i < data.size(); i++) {
 			DataVector v = data.get(i);
 			if (v.get(columnIndex) == value) {
 				removed.add(data.remove(i));
-				i--; //update index after item removal
+				i--; // update index after item removal
 			}
 		}
-		
+
 		return removed;
 	}
 
@@ -543,7 +557,7 @@ public class DataPackage {
 				lines++;
 				if (lines > offset) {
 					DataVector vector = new DataVector();
-					vector.parse(strLine, sep_regexp, decimal_separator, firstIdx, lastIdx);
+					vector.parse(strLine, sep_regexp, decimal_separator, firstIdx, lastIdx, ignore_parse_errors);
 					if (!vector.data.isEmpty()) {
 						counter++;
 						add(vector);
@@ -573,9 +587,9 @@ public class DataPackage {
 			sum += v.getAverage();
 		}
 
-		return sum/data.size();
-	}	
-	
+		return sum / data.size();
+	}
+
 	/**
 	 * @return text info about minimum and maximum values stored in loaded set
 	 */
