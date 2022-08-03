@@ -6,6 +6,8 @@ import java.util.Vector;
 public class DataVector {
 
 	Vector<Double> data;
+	int number = 0;
+	String description;
 
 	public DataVector() {
 		data = new Vector<Double>();
@@ -30,6 +32,22 @@ public class DataVector {
 	public DataVector(DataVector src) {
 		data = new Vector<Double>();
 		assign(src.data, 0, src.data.size() - 1);
+	}
+
+	public int getNumber() {
+		return number;
+	}
+
+	public void setNumber(int number) {
+		this.number = number;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public int size() {
